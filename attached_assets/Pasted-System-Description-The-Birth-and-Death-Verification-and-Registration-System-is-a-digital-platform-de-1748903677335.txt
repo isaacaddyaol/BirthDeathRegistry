@@ -1,0 +1,72 @@
+System Description
+The Birth and Death Verification and Registration System is a digital platform designed to facilitate the recording, verification, and retrieval of vital events—specifically births and deaths—in Ghana. It digitizes and automates the processes carried out by the national Births and Deaths Registry, making them more accessible, efficient, and transparent.
+
+Core Functionalities
+1. Birth Registration
+User Submission: Parents, health officials, or authorized agents can submit a digital birth registration form.
+
+Required Data:
+
+Full name of child
+
+Date and place of birth
+
+Sex of the child
+
+Names and national IDs of parents
+
+Hospital or midwife certificate (upload)
+
+Validation Workflow:
+
+Automated format validation
+
+Manual verification by a Registrar
+
+Unique Birth ID Generation: Once approved, the system assigns a unique Birth Certificate Number.
+
+Downloadable Certificate: After approval, users can download a digital certificate with a QR code or barcode for verification.
+
+2. Death Registration
+User Submission: Relatives, health officials, or funeral homes can initiate the registration.
+
+Required Data:
+
+Full name of deceased
+
+Date and place of death
+
+Cause of death (medical certificate)
+
+Next of kin details
+
+Workflow Similar to Birth Registration
+
+Digital Certificate Issuance: Includes a QR code for verification purposes.
+
+3. Verification System
+Search and Verify Feature:
+
+By inputting a unique ID (e.g., Birth Certificate Number), users can verify the authenticity of a birth/death certificate.
+
+Returns match status, registration office, and date issued.
+
+QR Code Scanner (optional for mobile): Users can scan to verify document authenticity.
+
+4. Admin Portal
+View pending applications
+
+Approve/reject submissions
+
+Manage user access
+
+Generate analytics (e.g., number of births per region)
+
+5. User Accounts & Roles
+Public Users: Register and view their own data
+
+Health Workers: Submit registrations on behalf of patients
+
+Registrars: Validate, approve, or reject applications
+
+Admins: Manage the entire system and oversee analytics
