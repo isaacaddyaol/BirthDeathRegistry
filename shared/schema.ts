@@ -140,6 +140,8 @@ export const insertBirthRegistrationSchema = createInsertSchema(birthRegistratio
   approvedAt: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  birthDate: z.coerce.date(),
 });
 
 export const insertDeathRegistrationSchema = createInsertSchema(deathRegistrations).omit({
@@ -152,6 +154,8 @@ export const insertDeathRegistrationSchema = createInsertSchema(deathRegistratio
   approvedAt: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  deathDate: z.coerce.date(),
 });
 
 // Types

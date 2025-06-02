@@ -6,13 +6,14 @@ import BirthRegistrationForm from "@/components/BirthRegistrationForm";
 import DeathRegistrationForm from "@/components/DeathRegistrationForm";
 import CertificateVerification from "@/components/CertificateVerification";
 import AdminPanel from "@/components/AdminPanel";
+import RecentRegistrations from "@/components/RecentRegistrations";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Baby, Users, Search, Settings, Clock, CheckCircle, IdCard } from "lucide-react";
+import { Baby, Users, Search, Settings, Clock, CheckCircle, IdCard, History } from "lucide-react";
 import { isUnauthorizedError } from "@/lib/authUtils";
 
-type ViewType = 'dashboard' | 'birth' | 'death' | 'verification' | 'admin';
+type ViewType = 'dashboard' | 'birth' | 'death' | 'verification' | 'admin' | 'recent';
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
@@ -74,6 +75,8 @@ export default function Dashboard() {
           );
         }
         return <AdminPanel onBack={() => setCurrentView('dashboard')} />;
+      case 'recent':
+        return <RecentRegistrations onBack={() => setCurrentView('dashboard')} />;
       default:
         return (
           <div className="space-y-8">
@@ -86,7 +89,7 @@ export default function Dashboard() {
             </div>
 
             {/* Quick Actions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
               <Button
                 onClick={() => setCurrentView('birth')}
                 className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 p-6 h-auto flex-col space-y-2 shadow-md hover:shadow-lg transition-shadow border-l-4 border-l-ghana-green"
@@ -120,6 +123,18 @@ export default function Dashboard() {
                 <div className="text-center">
                   <h3 className="text-lg font-semibold">Verify IdCard</h3>
                   <p className="text-gray-600 text-sm">Lookup and verify documents</p>
+                </div>
+              </Button>
+
+              <Button
+                onClick={() => setCurrentView('recent')}
+                className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 p-6 h-auto flex-col space-y-2 shadow-md hover:shadow-lg transition-shadow border-l-4 border-l-purple-500"
+                variant="outline"
+              >
+                <History className="text-purple-500 text-3xl" />
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold">Recent Data</h3>
+                  <p className="text-gray-600 text-sm">View recent registrations</p>
                 </div>
               </Button>
 
