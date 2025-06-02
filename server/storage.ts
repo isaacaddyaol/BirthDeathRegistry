@@ -10,7 +10,7 @@ import {
   type InsertDeathRegistration,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, or } from "drizzle-orm";
+import { eq, desc, and, or, count, gte } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -244,48 +244,44 @@ export class DatabaseStorage implements IStorage {
     startOfMonth.setHours(0, 0, 0, 0);
 
     const [pendingBirthResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(birthRegistrations.id) })
       .from(birthRegistrations)
       .where(eq(birthRegistrations.status, "pending"));
 
     const [pendingDeathResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(deathRegistrations.id) })
       .from(deathRegistrations)
       .where(eq(deathRegistrations.status, "pending"));
 
     const [approvedBirthResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(birthRegistrations.id) })
       .from(birthRegistrations)
       .where(and(
         eq(birthRegistrations.status, "approved"),
-        // @ts-ignore
         gte(birthRegistrations.approvedAt, startOfMonth)
       ));
 
     const [approvedDeathResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(deathRegistrations.id) })
       .from(deathRegistrations)
       .where(and(
         eq(deathRegistrations.status, "approved"),
-        // @ts-ignore
         gte(deathRegistrations.approvedAt, startOfMonth)
       ));
 
     const [totalBirthResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(birthRegistrations.id) })
       .from(birthRegistrations);
 
     const [totalDeathResult] = await db
-      .select({ count: 1 })
+      .select({ count: count(deathRegistrations.id) })
       .from(deathRegistrations);
 
     return {
-      pendingBirth: Array.isArray(pendingBirthResult) ? pendingBirthResult.length : 0,
-      pendingDeath: Array.isArray(pendingDeathResult) ? pendingDeathResult.length : 0,
-      approvedThisMonth: (Array.isArray(approvedBirthResult) ? approvedBirthResult.length : 0) +
-                        (Array.isArray(approvedDeathResult) ? approvedDeathResult.length : 0),
-      totalRegistrations: (Array.isArray(totalBirthResult) ? totalBirthResult.length : 0) +
-                         (Array.isArray(totalDeathResult) ? totalDeathResult.length : 0),
+      pendingBirth: Number(pendingBirthResult?.count || 0),
+      pendingDeath: Number(pendingDeathResult?.count || 0),
+      approvedThisMonth: Number(approvedBirthResult?.count || 0) + Number(approvedDeathResult?.count || 0),
+      totalRegistrations: Number(totalBirthResult?.count || 0) + Number(totalDeathResult?.count || 0),
     };
   }
 }
