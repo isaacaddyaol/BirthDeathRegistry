@@ -28,6 +28,7 @@ export const sessions = pgTable(
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
+  password: varchar("password").notNull(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -165,3 +166,56 @@ export type BirthRegistration = typeof birthRegistrations.$inferSelect;
 export type InsertBirthRegistration = z.infer<typeof insertBirthRegistrationSchema>;
 export type DeathRegistration = typeof deathRegistrations.$inferSelect;
 export type InsertDeathRegistration = z.infer<typeof insertDeathRegistrationSchema>;
+
+export interface DashboardStats {
+  pendingBirth: number;
+  pendingDeath: number;
+  approvedThisMonth: number;
+  totalRegistrations: number;
+  recentActivity: {
+    births: number;
+    deaths: number;
+  };
+  monthlyGrowth: number;
+  registrationsByStatus: {
+    approved: number;
+    pending: number;
+    rejected: number;
+  };
+  timelineStats: {
+    today: {
+      births: number;
+      deaths: number;
+    };
+    thisWeek: {
+      births: number;
+      deaths: number;
+    };
+    thisMonth: {
+      births: number;
+      deaths: number;
+    };
+  };
+  processingTimes: {
+    averageApprovalTime: number; // in hours
+    fastestApproval: number; // in hours
+  };
+  registrationTrends: {
+    labels: string[];
+    births: number[];
+    deaths: number[];
+  };
+  recentRegistrations: Array<{
+    id: string;
+    type: 'birth' | 'death';
+    name: string;
+    date: string;
+    status: string;
+    location: string;
+  }>;
+  regionalData: Array<{
+    region: string;
+    births: number;
+    deaths: number;
+  }>;
+}

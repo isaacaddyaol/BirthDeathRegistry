@@ -9,8 +9,25 @@ interface NavigationProps {
 }
 
 export default function Navigation({ user }: NavigationProps) {
-  const handleLogout = () => {
-    window.location.href = "/api/logout";
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include" // Include cookies in the request
+      });
+      
+      // Clear any client-side auth state (if any exists in localStorage)
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      
+      // Redirect to landing page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Still redirect to landing page even if logout API fails
+      window.location.href = "/";
+    }
   };
 
   const getRoleDisplay = (role: string) => {

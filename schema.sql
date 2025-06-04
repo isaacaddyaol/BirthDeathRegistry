@@ -21,6 +21,7 @@ CREATE INDEX IDX_session_expire ON sessions(expire);
 CREATE TABLE users (
     id VARCHAR PRIMARY KEY,
     email VARCHAR UNIQUE,
+    password VARCHAR NOT NULL,
     first_name VARCHAR,
     last_name VARCHAR,
     profile_image_url VARCHAR,

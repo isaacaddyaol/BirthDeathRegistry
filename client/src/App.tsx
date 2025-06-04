@@ -7,20 +7,29 @@ import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GOOGLE_CLIENT_ID } from "@/config/google";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ghana-blue mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Switch>
-      {isLoading || !isAuthenticated ? (
-        <Route path="/" component={Landing} />
-      ) : (
-        <>
-          <Route path="/" component={Dashboard} />
-        </>
-      )}
-      <Route component={NotFound} />
+      <Route path="/" component={isAuthenticated ? Dashboard : Landing} />
+      <Route path="/dashboard" component={isAuthenticated ? Dashboard : Landing} />
+      <Route path="/login" component={Landing} />
+      <Route path="/:rest*" component={NotFound} />
     </Switch>
   );
 }
@@ -28,10 +37,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </GoogleOAuthProvider>
     </QueryClientProvider>
   );
 }

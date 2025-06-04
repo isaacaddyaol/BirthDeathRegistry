@@ -1,11 +1,37 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IdCard, Shield, Users, Clock } from "lucide-react";
+import LoginForm from "@/components/LoginForm";
+import SignUpForm from "@/components/SignUpForm";
 
 export default function Landing() {
-  const handleLogin = () => {
-    window.location.href = "/api/login";
+  const [showAuth, setShowAuth] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+  const handleAuthClick = () => {
+    setShowAuth(true);
   };
+
+  const handleSwitchToSignUp = () => {
+    setIsLogin(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setIsLogin(true);
+  };
+
+  if (showAuth) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        {isLogin ? (
+          <LoginForm onSwitchToSignUp={handleSwitchToSignUp} />
+        ) : (
+          <SignUpForm onSwitchToLogin={handleSwitchToLogin} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -17,12 +43,24 @@ export default function Landing() {
               <IdCard className="text-white text-2xl mr-3" />
               <span className="text-white text-xl font-semibold">Ghana Birth & Death Registry</span>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <Button 
-                onClick={handleLogin}
+                onClick={() => {
+                  setIsLogin(true);
+                  handleAuthClick();
+                }}
                 className="bg-ghana-gold hover:bg-yellow-600 text-white"
               >
                 Sign In
+              </Button>
+              <Button 
+                onClick={() => {
+                  setIsLogin(false);
+                  handleAuthClick();
+                }}
+                className="bg-ghana-green hover:bg-green-700 text-white"
+              >
+                Sign Up
               </Button>
             </div>
           </div>
@@ -41,7 +79,10 @@ export default function Landing() {
               Secure, efficient, and accessible birth and death certificate services.
             </p>
             <Button 
-              onClick={handleLogin}
+              onClick={() => {
+                setIsLogin(true);
+                handleAuthClick();
+              }}
               size="lg"
               className="bg-ghana-gold hover:bg-yellow-600 text-white text-lg px-8 py-3"
             >
@@ -133,7 +174,10 @@ export default function Landing() {
             Join thousands of Ghanaians using our secure digital registry system.
           </p>
           <Button 
-            onClick={handleLogin}
+            onClick={() => {
+              setIsLogin(true);
+              handleAuthClick();
+            }}
             size="lg"
             className="bg-ghana-blue hover:bg-blue-700 text-white text-lg px-8 py-3"
           >
@@ -155,10 +199,22 @@ export default function Landing() {
             <div>
               <h4 className="text-md font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm text-gray-300">
-                <li><button onClick={handleLogin} className="hover:text-white">Register Birth</button></li>
-                <li><button onClick={handleLogin} className="hover:text-white">Register Death</button></li>
-                <li><button onClick={handleLogin} className="hover:text-white">Verify IdCard</button></li>
-                <li><button onClick={handleLogin} className="hover:text-white">User Guide</button></li>
+                <li><button onClick={() => {
+                  setIsLogin(true);
+                  handleAuthClick();
+                }} className="hover:text-white">Register Birth</button></li>
+                <li><button onClick={() => {
+                  setIsLogin(false);
+                  handleAuthClick();
+                }} className="hover:text-white">Register Death</button></li>
+                <li><button onClick={() => {
+                  setIsLogin(true);
+                  handleAuthClick();
+                }} className="hover:text-white">Verify IdCard</button></li>
+                <li><button onClick={() => {
+                  setIsLogin(true);
+                  handleAuthClick();
+                }} className="hover:text-white">User Guide</button></li>
               </ul>
             </div>
             <div>

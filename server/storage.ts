@@ -13,8 +13,9 @@ import { db } from "./db";
 import { eq, desc, and, or, count, gte } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations (mandatory for Replit Auth)
+  // User operations
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   
   // Birth registration operations
@@ -44,26 +45,33 @@ export interface IStorage {
   }>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class Storage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0];
+  }
+
+  async upsertUser(user: UpsertUser): Promise<User> {
+    const result = await db.insert(users).values(user)
       .onConflictDoUpdate({
         target: users.id,
         set: {
-          ...userData,
+          email: user.email,
+          password: user.password,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
           updatedAt: new Date(),
         },
       })
       .returning();
-    return user;
+    return result[0];
   }
 
   // Birth registration operations
@@ -286,4 +294,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new Storage();
